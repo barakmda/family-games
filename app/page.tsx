@@ -55,19 +55,24 @@ export default function HomePage() {
             </div>
           </Link>
 
-          {/* Family Trivia — coming soon */}
-          <div className="bg-white rounded-2xl border-2 border-gray-100 p-5 select-none opacity-60">
-            <div className="text-5xl mb-3">🧠❓</div>
-            <h3 className="font-black text-amber-900 text-xl leading-tight">אתה חושב שאתה חכם?</h3>
-            <p className="text-amber-600 text-sm mt-1 leading-relaxed">
-              טריוויה משפחתית בסגנון טל פרידמן
+          {/* Mamad Maze — active */}
+          <Link
+            href="/games/mamad-maze"
+            className="group bg-stone-800 rounded-2xl border-2 border-stone-600 p-5 hover:border-red-500 hover:shadow-xl hover:-translate-y-0.5 transition-all block relative"
+          >
+            <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+              🚨 חדש!
+            </span>
+            <div className="text-5xl mb-3">🚽🏃‍♀️🛡️</div>
+            <h3 className="font-black text-white text-xl leading-tight">המבוך לממ&quot;ד</h3>
+            <p className="text-stone-400 text-sm mt-1 leading-relaxed">
+              יש אזעקה. מיכל בשירותים. יש לך 90 שניות.
             </p>
-            <div className="mt-4">
-              <span className="inline-block text-xs bg-gray-100 text-gray-400 px-3 py-1 rounded-full font-medium">
-                בקרוב...
-              </span>
+            <div className="mt-4 flex items-center gap-2 text-red-400 group-hover:text-red-300 transition-colors">
+              <span className="text-sm font-bold">שחק עכשיו</span>
+              <span className="text-base">←</span>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* AI Studio */}
