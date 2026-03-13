@@ -293,7 +293,7 @@ export default function MamadMaze() {
   const [stars, setStars] = useState(0);
   const [shakeScreen, setShakeScreen] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
-  const [fogEnabled, setFogEnabled] = useState(true);
+  const [fogEnabled, setFogEnabled] = useState(false);
 
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
@@ -849,8 +849,8 @@ export default function MamadMaze() {
         </div>
       </div>
 
-      {/* D-Pad */}
-      <div className="p-3 pb-5 flex justify-center bg-stone-900/60">
+      {/* D-Pad — dir=ltr to prevent RTL grid reversal */}
+      <div dir="ltr" className="p-3 pb-5 flex justify-center bg-stone-900/60">
         <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(3, 52px)' }}>
           <div />
           <button
