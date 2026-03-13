@@ -73,6 +73,25 @@ export default function HomePage() {
               <span className="text-base">←</span>
             </div>
           </Link>
+
+          {/* Lego Rescue — active */}
+          <Link
+            href="/games/lego-rescue"
+            className="group bg-blue-900 rounded-2xl border-2 border-blue-600 p-5 hover:border-yellow-400 hover:shadow-xl hover:-translate-y-0.5 transition-all block relative"
+          >
+            <span className="absolute top-3 left-3 bg-yellow-400 text-yellow-900 text-xs font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+              🧱 חדש!
+            </span>
+            <div className="text-5xl mb-3">🏎️🧱🤱</div>
+            <h3 className="font-black text-white text-xl leading-tight">חיים מציל את הלגו</h3>
+            <p className="text-blue-300 text-sm mt-1 leading-relaxed">
+              יש אזעקה! תפוס כמה שיותר לגו טכניק לפני שאמא תופסת
+            </p>
+            <div className="mt-4 flex items-center gap-2 text-yellow-400 group-hover:text-yellow-300 transition-colors">
+              <span className="text-sm font-bold">שחק עכשיו</span>
+              <span className="text-base">←</span>
+            </div>
+          </Link>
         </div>
 
         {/* AI Studio */}
