@@ -109,6 +109,182 @@ function randomFrom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// ─── Sound Effects (Web Audio API) ──────────────────────────────────────────
+
+function getAudioCtx(): AudioContext | null {
+  if (typeof window === 'undefined') return null;
+  const w = window as unknown as { _legoAudioCtx?: AudioContext };
+  if (!w._legoAudioCtx) {
+    w._legoAudioCtx = new AudioContext();
+  }
+  return w._legoAudioCtx;
+}
+
+function playFart() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Brown noise burst filtered low = fart sound
+  const duration = 0.15 + Math.random() * 0.25;
+  const bufferSize = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  let val = 0;
+  for (let i = 0; i < bufferSize; i++) {
+    val += (Math.random() * 2 - 1) * 0.1;
+    val = Math.max(-1, Math.min(1, val));
+    // Amplitude envelope: quick attack, slow decay
+    const env = Math.exp(-i / (bufferSize * 0.3));
+    data[i] = val * env;
+  }
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  // Low pass to make it bassy
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 150 + Math.random() * 100;
+  filter.Q.value = 2;
+  const gain = ctx.createGain();
+  gain.gain.value = 0.6;
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  source.start();
+}
+
+function playBigFart() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const duration = 0.4 + Math.random() * 0.3;
+  const bufferSize = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  let val = 0;
+  for (let i = 0; i < bufferSize; i++) {
+    val += (Math.random() * 2 - 1) * 0.15;
+    val = Math.max(-1, Math.min(1, val));
+    // Wobble effect for "wet" fart
+    const wobble = Math.sin(i / (ctx.sampleRate * 0.02)) * 0.3;
+    const env = Math.exp(-i / (bufferSize * 0.5));
+    data[i] = (val + wobble * val) * env;
+  }
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 100 + Math.random() * 80;
+  filter.Q.value = 5;
+  const gain = ctx.createGain();
+  gain.gain.value = 0.8;
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  source.start();
+}
+
+function playGrab() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Happy ascending "ding ding!"
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(600, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(1200, ctx.currentTime + 0.1);
+  gain.gain.setValueAtTime(0.3, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.2);
+}
+
+function playCombo() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Triumphant ascending arpeggio
+  [0, 0.08, 0.16].forEach((delay, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = [523, 659, 784][i]; // C5, E5, G5
+    gain.gain.setValueAtTime(0.15, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.15);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + 0.15);
+  });
+}
+
+function playBuzz() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Angry buzzer
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.value = 80;
+  gain.gain.setValueAtTime(0.25, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.3);
+}
+
+function playMiss() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Sad descending "wah wah"
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(400, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(150, ctx.currentTime + 0.4);
+  gain.gain.setValueAtTime(0.25, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.4);
+}
+
+function playGameOver() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  // Dramatic descending + big fart
+  [0, 0.15, 0.3, 0.45].forEach((delay, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = [392, 330, 262, 196][i]; // G4, E4, C4, G3
+    gain.gain.setValueAtTime(0.2, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + 0.2);
+  });
+  setTimeout(() => playBigFart(), 650);
+}
+
+function playSiren() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(600, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(900, ctx.currentTime + 0.3);
+  osc.frequency.linearRampToValueAtTime(600, ctx.currentTime + 0.6);
+  gain.gain.setValueAtTime(0.15, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.6);
+}
+
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const GAME_DURATION = 30;
@@ -198,6 +374,7 @@ export default function LegoRescueGame() {
       setCombo(c => c + 1);
       showQuote(randomFrom(QUOTES.grabTechnic));
       flash('rgba(34,197,94,0.3)');
+      if (combo >= 2) playCombo(); else playGrab();
       setItems(prev => prev.map(i => i.uid === uid ? { ...i, grabbed: true } : i));
     } else if (item.category === 'logical') {
       setScore(s => Math.max(0, s - 50));
@@ -207,6 +384,7 @@ export default function LegoRescueGame() {
       showQuote(randomFrom(QUOTES.grabLogical));
       flash('rgba(239,68,68,0.3)');
       shake();
+      playBigFart();
       setItems(prev => prev.map(i => i.uid === uid ? { ...i, rejected: true } : i));
     } else {
       // trap
@@ -217,6 +395,7 @@ export default function LegoRescueGame() {
       showQuote(randomFrom(QUOTES.grabTrap));
       flash('rgba(251,191,36,0.3)');
       shake();
+      playFart();
       setItems(prev => prev.map(i => i.uid === uid ? { ...i, rejected: true } : i));
     }
   }, [combo, showQuote, flash, shake]);
@@ -239,6 +418,11 @@ export default function LegoRescueGame() {
     if (timeLeftRef.current <= 0 || mamaMeterRef.current >= MAMA_MAX) {
       setPhase('gameover');
       return;
+    }
+
+    // Warning buzz when mama meter is high
+    if (mamaMeterRef.current >= 70 && Math.random() < 0.01) {
+      playBuzz();
     }
 
     // Spawn items
@@ -267,6 +451,7 @@ export default function LegoRescueGame() {
         setScore(s => Math.max(0, s - 20 * missed.length));
         setCombo(0);
         showQuote(randomFrom(QUOTES.missTechnic));
+        playMiss();
       }
 
       // Remove items that fell off screen or were grabbed/rejected and faded
@@ -294,6 +479,7 @@ export default function LegoRescueGame() {
     uidRef.current = 0;
     lastSpawnRef.current = 0;
     lastTickRef.current = 0;
+    playSiren();
     animFrameRef.current = requestAnimationFrame(gameLoop);
   }, [gameLoop]);
 
@@ -304,11 +490,14 @@ export default function LegoRescueGame() {
     };
   }, []);
 
-  // Save high score on game over
+  // Save high score on game over + play sound
   useEffect(() => {
-    if (phase === 'gameover' && score > highScore) {
-      setHighScore(score);
-      localStorage.setItem('lego-rescue-highscore', score.toString());
+    if (phase === 'gameover') {
+      playGameOver();
+      if (score > highScore) {
+        setHighScore(score);
+        localStorage.setItem('lego-rescue-highscore', score.toString());
+      }
     }
   }, [phase, score, highScore]);
 
