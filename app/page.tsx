@@ -74,6 +74,25 @@ export default function HomePage() {
             </div>
           </Link>
 
+          {/* Mamad Maze Pro — active */}
+          <Link
+            href="/games/mamad-maze-pro"
+            className="group bg-slate-950 rounded-2xl border-2 border-purple-600 p-5 hover:border-purple-400 hover:shadow-xl hover:-translate-y-0.5 transition-all block relative"
+          >
+            <span className="absolute top-3 left-3 bg-purple-500 text-white text-xs font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+              🌑 חדש!
+            </span>
+            <div className="text-5xl mb-3">🔦🌑👧</div>
+            <h3 className="font-black text-white text-xl leading-tight">מבוך החושך</h3>
+            <p className="text-slate-400 text-sm mt-1 leading-relaxed">
+              מבוכים פרוצדורליים, תאורה דינמית, אויבים, פאוור-אפים
+            </p>
+            <div className="mt-4 flex items-center gap-2 text-purple-400 group-hover:text-purple-300 transition-colors">
+              <span className="text-sm font-bold">שחק עכשיו</span>
+              <span className="text-base">←</span>
+            </div>
+          </Link>
+
           {/* Lego Rescue — active */}
           <Link
             href="/games/lego-rescue"
