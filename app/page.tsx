@@ -79,18 +79,25 @@ export default function HomePage() {
         <h2 className="text-sm font-black text-amber-700 uppercase tracking-widest mb-3">
           🎨 סטודיו יצירה
         </h2>
-        <div className="bg-white rounded-2xl border-2 border-gray-100 p-5 opacity-60 select-none">
+        <Link
+          href="/games/ai-studio"
+          className="group bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl border-2 border-purple-200 p-5 hover:border-purple-400 hover:shadow-xl hover:-translate-y-0.5 transition-all block relative"
+        >
+          <span className="absolute top-3 left-3 bg-purple-500 text-white text-xs font-black px-2 py-0.5 rounded-full shadow-sm">
+            חדש!
+          </span>
           <div className="flex items-center gap-4">
-            <div className="text-4xl">🖼️🤖</div>
+            <div className="text-4xl">🎨🤖</div>
             <div>
-              <h3 className="font-black text-amber-900 text-lg">מעבדת AI</h3>
-              <p className="text-amber-600 text-sm mt-0.5">מצא את ההבדלים · חפש את הפרצוף</p>
-              <span className="inline-block mt-2 text-xs bg-gray-100 text-gray-400 px-3 py-1 rounded-full font-medium">
-                בקרוב...
-              </span>
+              <h3 className="font-black text-purple-900 text-lg">מעבדת AI</h3>
+              <p className="text-purple-600 text-sm mt-0.5">תכתבו מה בא לכם ו-AI ייצור תמונה!</p>
+              <div className="mt-2 flex items-center gap-2 text-purple-500 group-hover:text-purple-700 transition-colors">
+                <span className="text-sm font-bold">נסו עכשיו</span>
+                <span className="text-base">←</span>
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
       </main>
 
       {/* Footer */}
