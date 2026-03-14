@@ -162,6 +162,39 @@ export default function HomePage() {
           ))}
         </div>
 
+        {/* Tools section */}
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-sm font-black text-amber-800 uppercase tracking-widest">
+            כלים
+          </h2>
+          <div className="flex-1 h-px bg-amber-200" />
+        </div>
+
+        <div className="mb-8">
+          <Link
+            href="/videos"
+            className="group relative overflow-hidden rounded-2xl border-2 border-emerald-300 hover:border-emerald-500 bg-gradient-to-br from-emerald-50 to-teal-100 p-5 sm:p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 block card-shine animate-fade-in-up"
+          >
+            <span className="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-black px-2.5 py-1 rounded-full shadow-sm">
+              חדש!
+            </span>
+            <div className="text-4xl sm:text-5xl mb-3 select-none">🎬✨</div>
+            <h3 className="font-black text-xl sm:text-[1.35rem] leading-tight text-amber-900">
+              יוצר סרטוני ברכה
+            </h3>
+            <p className="text-sm mt-1.5 leading-relaxed text-emerald-700">
+              צרו סרטון ברכה אישי למשפחה — עם תצוגה מקדימה חיה.
+            </p>
+            <p className="text-xs mt-3 italic leading-relaxed text-amber-500">
+              ״סרטון? בזמני היינו שולחים מכתב. עם בול. ברגל.״
+            </p>
+            <div className="mt-4 flex items-center gap-2 text-emerald-600 group-hover:text-emerald-800 transition-colors">
+              <span className="text-sm font-bold">צור סרטון</span>
+              <span className="text-base group-hover:-translate-x-1 transition-transform">←</span>
+            </div>
+          </Link>
+        </div>
+
         {/* Coming soon section */}
         <div className="flex items-center gap-3 mb-4">
           <h2 className="text-sm font-black text-amber-800 uppercase tracking-widest">

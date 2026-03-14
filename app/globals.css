@@ -76,6 +76,25 @@ body {
   animation: wiggle 2s ease-in-out infinite;
 }
 
+/* Video creator form inputs */
+.input-field {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 2px solid #fde68a;
+  border-radius: 0.75rem;
+  background: white;
+  color: #451a03;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+.input-field:focus {
+  outline: none;
+  border-color: #d97706;
+}
+.input-field::placeholder {
+  color: #d4a574;
+}
+
 /* Mobile safe area */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom {

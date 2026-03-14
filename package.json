@@ -13,6 +13,7 @@
   "dependencies": {
     "@pixi/react": "^8.0.5",
     "@remotion/cli": "^4.0.435",
+    "@remotion/player": "^4.0.435",
     "@remotion/zod-types": "^4.0.435",
     "next": "16.1.6",
     "pixi.js": "^8.17.0",
