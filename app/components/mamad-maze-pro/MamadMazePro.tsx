@@ -1414,13 +1414,29 @@ export default function MamadMazePro() {
 
   // ─── LOST ──────────────────────────────────────────────────────────────────
 
+  const LOST_ENDINGS = [
+    'ולפחות היה לה שקט.',
+    'אבל לפחות היה נייר.',
+    'ועכשיו היא קוראת את כל החדשות ברוגע.',
+    'והפעם עם ספר סודוקו.',
+    'ושלחה הודעה לכולם: "אני בסדר, תפסיקו לדפוק."',
+    'וגילתה שיש שם WiFi מעולה.',
+    'והזמינה שווארמה מ-Wolt. למה לא?',
+    'ופתחה טיקטוק. עכשיו יש לה 3,000 עוקבים.',
+    'ובנתה ממ"ד מנייר טואלט. מקלט בתוך מקלט.',
+    'והתחילה פודקאסט חדש: "מהשירותים עם אהבה".',
+    'ומצאה שם ביסלי מלפני שנתיים. עדיין טוב.',
+    'ושמעה את הפיצוץ מרחוק. "נשמע כמו שכנים חוגגים."',
+  ];
+
   if (phase === 'lost') {
+    const lostEnding = LOST_ENDINGS[Math.floor(Math.random() * LOST_ENDINGS.length)];
     return (
-      <div dir="rtl" className="min-h-screen bg-gradient-to-b from-red-950 via-slate-900 to-slate-950 flex flex-col items-center justify-center p-6 text-center">
+      <div dir="rtl" className="min-h-screen bg-gradient-to-b from-amber-950 via-slate-900 to-slate-950 flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md w-full">
-          <div className="text-6xl mb-4">⏰💀</div>
-          <h2 className="text-3xl font-black text-red-400 mb-2">נגמר הזמן!</h2>
-          <p className="text-slate-300 mb-6">מיכל לא הספיקה למקלט...</p>
+          <div className="text-6xl mb-4">🚽😌</div>
+          <h2 className="text-3xl font-black text-amber-300 mb-2">מיכל חזרה לשירותים...</h2>
+          <p className="text-slate-300 mb-6 text-lg leading-relaxed">{lostEnding}</p>
 
           <div className="flex gap-3">
             <button
