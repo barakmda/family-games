@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
-type Phase = 'intro' | 'story' | 'playing' | 'won' | 'lost' | 'levelSelect';
+type Phase = 'intro' | 'characterSelect' | 'story' | 'playing' | 'won' | 'lost' | 'levelSelect';
 type CellValue = 0 | 1 | 2 | 3 | 4 | 5; // wall, floor, start, end, locked-door, key-door-opened
 
 interface Collectible {
@@ -24,6 +24,80 @@ interface LevelDef {
   decos: Record<string, string>;
   lockedDoors: { row: number; col: number }[];
 }
+
+interface Character {
+  id: string;
+  name: string;
+  emoji: string;
+  title: string;
+  description: string;
+  color: string;        // tailwind border/bg accent
+  fogBonus: number;      // extra fog radius
+  timeBonus: number;     // extra seconds at start
+  phoneBonusSec: number; // seconds from phone (default 5)
+  collectBonus: boolean; // double collectible score bonus
+  revealItems: boolean;  // show collectibles through fog
+}
+
+interface RandomEvent {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  duration: number; // seconds the effect lasts (0 = instant)
+}
+
+// ── Characters ────────────────────────────────────────────────────────────────
+
+const CHARACTERS: Character[] = [
+  {
+    id: 'michal', name: 'מיכל', emoji: '👧', title: 'המקורית',
+    description: 'מכירה כל פינה בדירה. אין בונוסים, אין חסרונות.',
+    color: 'pink', fogBonus: 0, timeBonus: 0, phoneBonusSec: 5,
+    collectBonus: false, revealItems: false,
+  },
+  {
+    id: 'oriana', name: 'אוריאנה', emoji: '👩', title: 'העיניים החדות',
+    description: 'רואה רחוק יותר בערפל. רדיוס ראייה +2.',
+    color: 'purple', fogBonus: 2, timeBonus: 0, phoneBonusSec: 5,
+    collectBonus: false, revealItems: false,
+  },
+  {
+    id: 'chaim', name: 'חיים', emoji: '👦', title: 'הספרינטר',
+    description: 'תמיד מוכן לרוץ. מתחיל עם +10 שניות בונוס.',
+    color: 'blue', fogBonus: 0, timeBonus: 10, phoneBonusSec: 5,
+    collectBonus: false, revealItems: false,
+  },
+  {
+    id: 'barak', name: 'ברק', emoji: '🧑', title: 'המהנדס',
+    description: 'יודע לתקן הכל. טלפונים נותנים +8 שניות במקום +5.',
+    color: 'cyan', fogBonus: 0, timeBonus: 0, phoneBonusSec: 8,
+    collectBonus: false, revealItems: false,
+  },
+  {
+    id: 'inbar', name: 'ענבר', emoji: '👩‍🦰', title: 'האספנית',
+    description: 'אוספת הכל. פריטים שווים כפול לניקוד.',
+    color: 'amber', fogBonus: 0, timeBonus: 0, phoneBonusSec: 5,
+    collectBonus: true, revealItems: false,
+  },
+  {
+    id: 'zoe', name: 'זואי', emoji: '🐕', title: 'האף הטוב',
+    description: 'מרחרחת פריטים. רואה אספנים גם דרך הערפל.',
+    color: 'green', fogBonus: 0, timeBonus: 0, phoneBonusSec: 5,
+    collectBonus: false, revealItems: true,
+  },
+];
+
+// ── Random Events ─────────────────────────────────────────────────────────────
+
+const RANDOM_EVENTS: RandomEvent[] = [
+  { id: 'neighbor_door', name: 'השכן פתח דלת!', emoji: '🚪', description: 'קיר נעלם לכמה שניות...', duration: 8 },
+  { id: 'cat_block', name: 'החתול נכנס!', emoji: '🐈', description: 'החתול חוסם את המעבר!', duration: 7 },
+  { id: 'power_outage', name: 'הפסקת חשמל!', emoji: '💡', description: 'חושך! רואים פחות!', duration: 6 },
+  { id: 'bisli', name: 'מצאת ביסלי!', emoji: '🍿', description: '+7 שניות בונוס!', duration: 0 },
+  { id: 'earthquake', name: 'רעידת אדמה!', emoji: '🌍', description: 'הכל רועד!', duration: 3 },
+  { id: 'wind', name: 'רוח חזקה!', emoji: '💨', description: 'קירות זזים!', duration: 6 },
+];
 
 // ── Level Definitions ──────────────────────────────────────────────────────────
 
@@ -294,6 +368,11 @@ export default function MamadMaze() {
   const [shakeScreen, setShakeScreen] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
   const [fogEnabled, setFogEnabled] = useState(false);
+  const [selectedChar, setSelectedChar] = useState<Character>(CHARACTERS[0]);
+  const [activeEvent, setActiveEvent] = useState<RandomEvent | null>(null);
+  const [eventBanner, setEventBanner] = useState<{ emoji: string; name: string; description: string } | null>(null);
+  const [tempWallChanges, setTempWallChanges] = useState<{ row: number; col: number; wasWall: boolean }[]>([]);
+  const [fogOverride, setFogOverride] = useState(false); // temporary fog from power outage
 
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
@@ -302,6 +381,8 @@ export default function MamadMaze() {
   const mazeRef = useRef<number[][]>([]);
   const collectiblesRef = useRef<Collectible[]>([]);
   const hasKeyRef = useRef(false);
+  const selectedCharRef = useRef<Character>(CHARACTERS[0]);
+  selectedCharRef.current = selectedChar;
 
   const level = LEVELS[currentLevel];
 
@@ -343,17 +424,216 @@ export default function MamadMaze() {
     }
   }, [phase, timeLeft]);
 
+  // ── Random Events System ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (phase !== 'playing') return;
+    // First event after 10-15 seconds, then every 12-20 seconds
+    const delay = 10000 + Math.random() * 5000;
+    const timer = setTimeout(() => {
+      if (phaseRef.current !== 'playing') return;
+      triggerRandomEvent();
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [phase, activeEvent]); // re-schedule after each event ends
+
+  function triggerRandomEvent() {
+    const event = RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)];
+    setActiveEvent(event);
+    setEventBanner({ emoji: event.emoji, name: event.name, description: event.description });
+
+    // Hide banner after 2.5 seconds
+    setTimeout(() => setEventBanner(null), 2500);
+
+    const currentMaze = mazeRef.current;
+
+    switch (event.id) {
+      case 'neighbor_door': {
+        // Find a random wall adjacent to a floor cell and open it
+        const candidates: { row: number; col: number }[] = [];
+        for (let r = 1; r < currentMaze.length - 1; r++) {
+          for (let c = 1; c < currentMaze[0].length - 1; c++) {
+            if (currentMaze[r][c] !== 0) continue;
+            // Check if adjacent to a floor
+            const hasFloor = [[-1, 0], [1, 0], [0, -1], [0, 1]].some(
+              ([dr, dc]) => currentMaze[r + dr]?.[c + dc] === 1
+            );
+            // Check if opening this wall connects two areas (has floor on at least 2 sides)
+            const floorCount = [[-1, 0], [1, 0], [0, -1], [0, 1]].filter(
+              ([dr, dc]) => {
+                const v = currentMaze[r + dr]?.[c + dc];
+                return v === 1 || v === 2 || v === 3;
+              }
+            ).length;
+            if (hasFloor && floorCount >= 2) candidates.push({ row: r, col: c });
+          }
+        }
+        if (candidates.length > 0) {
+          const spot = candidates[Math.floor(Math.random() * candidates.length)];
+          const newMaze = currentMaze.map(r => [...r]);
+          newMaze[spot.row][spot.col] = 1;
+          mazeRef.current = newMaze;
+          setMaze(newMaze);
+          setTempWallChanges([{ row: spot.row, col: spot.col, wasWall: true }]);
+          setTimeout(() => {
+            if (phaseRef.current !== 'playing') return;
+            const revert = mazeRef.current.map(r => [...r]);
+            revert[spot.row][spot.col] = 0;
+            mazeRef.current = revert;
+            setMaze(revert);
+            setTempWallChanges([]);
+            setActiveEvent(null);
+          }, event.duration * 1000);
+        } else {
+          setActiveEvent(null);
+        }
+        break;
+      }
+      case 'cat_block': {
+        // Place a temporary wall (cat) on a random floor cell near the player
+        const pPos = playerPosRef.current;
+        const candidates: { row: number; col: number }[] = [];
+        for (let r = Math.max(1, pPos.row - 4); r < Math.min(currentMaze.length - 1, pPos.row + 5); r++) {
+          for (let c = Math.max(1, pPos.col - 4); c < Math.min(currentMaze[0].length - 1, pPos.col + 5); c++) {
+            if (currentMaze[r][c] === 1 && !(r === pPos.row && c === pPos.col)) {
+              candidates.push({ row: r, col: c });
+            }
+          }
+        }
+        if (candidates.length > 0) {
+          const spot = candidates[Math.floor(Math.random() * candidates.length)];
+          const newMaze = currentMaze.map(r => [...r]);
+          newMaze[spot.row][spot.col] = 0;
+          mazeRef.current = newMaze;
+          setMaze(newMaze);
+          setTempWallChanges([{ row: spot.row, col: spot.col, wasWall: false }]);
+          setTimeout(() => {
+            if (phaseRef.current !== 'playing') return;
+            const revert = mazeRef.current.map(r => [...r]);
+            revert[spot.row][spot.col] = 1;
+            mazeRef.current = revert;
+            setMaze(revert);
+            setTempWallChanges([]);
+            setActiveEvent(null);
+          }, event.duration * 1000);
+        } else {
+          setActiveEvent(null);
+        }
+        break;
+      }
+      case 'power_outage': {
+        setFogOverride(true);
+        setShakeScreen(true);
+        setTimeout(() => setShakeScreen(false), 400);
+        setTimeout(() => {
+          setFogOverride(false);
+          setActiveEvent(null);
+        }, event.duration * 1000);
+        break;
+      }
+      case 'bisli': {
+        setTimeLeft(t => t + 7);
+        setActiveEvent(null);
+        break;
+      }
+      case 'earthquake': {
+        setShakeScreen(true);
+        setTimeout(() => setShakeScreen(false), 600);
+        // Open a random wall and close another
+        const wallCandidates: { row: number; col: number }[] = [];
+        const floorCandidates: { row: number; col: number }[] = [];
+        const pPos = playerPosRef.current;
+        for (let r = 1; r < currentMaze.length - 1; r++) {
+          for (let c = 1; c < currentMaze[0].length - 1; c++) {
+            if (currentMaze[r][c] === 0) {
+              const floorCount = [[-1, 0], [1, 0], [0, -1], [0, 1]].filter(
+                ([dr, dc]) => currentMaze[r + dr]?.[c + dc] === 1
+              ).length;
+              if (floorCount >= 2) wallCandidates.push({ row: r, col: c });
+            } else if (currentMaze[r][c] === 1 && !(r === pPos.row && c === pPos.col)) {
+              floorCandidates.push({ row: r, col: c });
+            }
+          }
+        }
+        const changes: { row: number; col: number; wasWall: boolean }[] = [];
+        const newMaze = currentMaze.map(r => [...r]);
+        if (wallCandidates.length > 0) {
+          const w = wallCandidates[Math.floor(Math.random() * wallCandidates.length)];
+          newMaze[w.row][w.col] = 1;
+          changes.push({ row: w.row, col: w.col, wasWall: true });
+        }
+        if (floorCandidates.length > 0) {
+          const f = floorCandidates[Math.floor(Math.random() * floorCandidates.length)];
+          newMaze[f.row][f.col] = 0;
+          changes.push({ row: f.row, col: f.col, wasWall: false });
+        }
+        mazeRef.current = newMaze;
+        setMaze(newMaze);
+        setTempWallChanges(changes);
+        setTimeout(() => {
+          if (phaseRef.current !== 'playing') return;
+          const revert = mazeRef.current.map(r => [...r]);
+          changes.forEach(ch => {
+            revert[ch.row][ch.col] = ch.wasWall ? 0 : 1;
+          });
+          mazeRef.current = revert;
+          setMaze(revert);
+          setTempWallChanges([]);
+          setActiveEvent(null);
+        }, event.duration * 1000);
+        break;
+      }
+      case 'wind': {
+        // Similar to earthquake but opens 2 walls
+        const candidates: { row: number; col: number }[] = [];
+        for (let r = 1; r < currentMaze.length - 1; r++) {
+          for (let c = 1; c < currentMaze[0].length - 1; c++) {
+            if (currentMaze[r][c] === 0) {
+              const floorCount = [[-1, 0], [1, 0], [0, -1], [0, 1]].filter(
+                ([dr, dc]) => currentMaze[r + dr]?.[c + dc] === 1
+              ).length;
+              if (floorCount >= 2) candidates.push({ row: r, col: c });
+            }
+          }
+        }
+        const newMaze = currentMaze.map(r => [...r]);
+        const changes: { row: number; col: number; wasWall: boolean }[] = [];
+        for (let i = 0; i < Math.min(2, candidates.length); i++) {
+          const idx = Math.floor(Math.random() * candidates.length);
+          const w = candidates.splice(idx, 1)[0];
+          newMaze[w.row][w.col] = 1;
+          changes.push({ row: w.row, col: w.col, wasWall: true });
+        }
+        mazeRef.current = newMaze;
+        setMaze(newMaze);
+        setTempWallChanges(changes);
+        setTimeout(() => {
+          if (phaseRef.current !== 'playing') return;
+          const revert = mazeRef.current.map(r => [...r]);
+          changes.forEach(ch => { revert[ch.row][ch.col] = 0; });
+          mazeRef.current = revert;
+          setMaze(revert);
+          setTempWallChanges([]);
+          setActiveEvent(null);
+        }, event.duration * 1000);
+        break;
+      }
+      default:
+        setActiveEvent(null);
+    }
+  }
+
   // Update fog when player moves
   useEffect(() => {
     if (phase !== 'playing' || !maze.length) return;
-    const fogRadius = currentLevel < 2 ? 4 : 3;
+    const baseRadius = currentLevel < 2 ? 4 : 3;
+    const fogRadius = fogOverride ? Math.max(2, baseRadius - 1) : baseRadius + selectedChar.fogBonus;
     const newVisible = getVisibleCells(playerPos.row, playerPos.col, maze, fogRadius);
     setRevealedCells(prev => {
       const merged = new Set(prev);
       newVisible.forEach(c => merged.add(c));
       return merged;
     });
-  }, [playerPos, phase, maze, currentLevel]);
+  }, [playerPos, phase, maze, currentLevel, selectedChar.fogBonus, fogOverride]);
 
   const move = useCallback((dr: number, dc: number) => {
     if (phaseRef.current !== 'playing') return;
@@ -391,9 +671,13 @@ export default function MamadMaze() {
       const updated = colls.map((c, i) => i === collIdx ? { ...c, collected: true } : c);
       collectiblesRef.current = updated;
       setCollectibles(updated);
-      if (colls[collIdx].type === 'key') {
+      const collType = colls[collIdx].type;
+      if (collType === 'key') {
         hasKeyRef.current = true;
         setHasKey(true);
+      }
+      if (collType === 'phone') {
+        setTimeLeft(t => t + selectedCharRef.current.phoneBonusSec);
       }
     }
 
@@ -432,7 +716,7 @@ export default function MamadMaze() {
     setMaze(mazeCopy);
     playerPosRef.current = startPos;
     setPlayerPos(startPos);
-    setTimeLeft(lvl.time);
+    setTimeLeft(lvl.time + selectedChar.timeBonus);
     setMoves(0);
     collectiblesRef.current = collsCopy;
     setCollectibles(collsCopy);
@@ -441,6 +725,10 @@ export default function MamadMaze() {
     setRevealedCells(new Set());
     setStars(0);
     setEndMsg('');
+    setActiveEvent(null);
+    setEventBanner(null);
+    setTempWallChanges([]);
+    setFogOverride(false);
   }
 
   function startLevel(levelIdx: number) {
@@ -468,9 +756,10 @@ export default function MamadMaze() {
   useEffect(() => {
     if (phase === 'won') {
       const collectedCount = collectibles.filter(c => c.collected).length;
-      const s = getStars(timeLeft, level.time, moves, collectibles.length, collectedCount);
+      const effectiveCollected = selectedChar.collectBonus ? Math.min(collectedCount * 2, collectibles.length) : collectedCount;
+      const s = getStars(timeLeft, level.time + selectedChar.timeBonus, moves, collectibles.length, effectiveCollected);
       setStars(s);
-      const timeTaken = level.time - timeLeft;
+      const timeTaken = (level.time + selectedChar.timeBonus) - timeLeft;
       saveProgress(level.id, s, timeTaken, moves);
     }
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -529,14 +818,63 @@ export default function MamadMaze() {
             </div>
           </div>
           <button
-            onClick={goToLevelSelect}
+            onClick={() => setPhase('characterSelect')}
             className="w-full bg-red-600 hover:bg-red-700 active:scale-95 text-white font-black text-xl py-4 rounded-xl transition-all cursor-pointer shadow-lg shadow-red-900"
           >
-            🚨 בחר שלב!
+            🚨 בחר דמות!
           </button>
           <Link href="/" className="block text-center mt-3 text-stone-500 hover:text-stone-300 text-sm transition-colors">
             ← חזרה לדף הבית
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ── CHARACTER SELECT ──────────────────────────────────────────────────────────
+  if (phase === 'characterSelect') {
+    return (
+      <div dir="rtl" className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-stone-800 rounded-2xl p-6 border border-stone-600 shadow-2xl">
+          <h2 className="text-2xl font-black text-white text-center mb-2">בחרו דמות</h2>
+          <p className="text-stone-400 text-center text-sm mb-5">לכל דמות כוח מיוחד!</p>
+          <div className="grid grid-cols-2 gap-3">
+            {CHARACTERS.map(char => {
+              const isSelected = selectedChar.id === char.id;
+              return (
+                <button
+                  key={char.id}
+                  onClick={() => setSelectedChar(char)}
+                  className={`p-3 rounded-xl border-2 transition-all text-right cursor-pointer active:scale-[0.97] ${
+                    isSelected
+                      ? 'bg-stone-600 border-yellow-400 shadow-lg shadow-yellow-400/20'
+                      : 'bg-stone-700 border-stone-600 hover:border-stone-400'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-3xl">{char.emoji}</span>
+                    <div>
+                      <div className="text-white font-black text-sm">{char.name}</div>
+                      <div className="text-yellow-400 text-xs font-bold">{char.title}</div>
+                    </div>
+                  </div>
+                  <p className="text-stone-400 text-xs leading-snug">{char.description}</p>
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={goToLevelSelect}
+            className="w-full mt-5 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-black text-xl py-4 rounded-xl transition-all cursor-pointer shadow-lg shadow-red-900"
+          >
+            {selectedChar.emoji} יאללה עם {selectedChar.name}!
+          </button>
+          <button
+            onClick={() => setPhase('intro')}
+            className="w-full mt-2 bg-stone-700 hover:bg-stone-600 text-stone-400 font-bold py-3 rounded-xl transition-all cursor-pointer"
+          >
+            ← חזרה
+          </button>
         </div>
       </div>
     );
@@ -605,8 +943,8 @@ export default function MamadMaze() {
     return (
       <div dir="rtl" className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
         <div className="max-w-sm w-full bg-stone-800 rounded-2xl p-7 text-center border border-stone-600 shadow-2xl">
-          <div className="text-6xl mb-3">🏠</div>
-          <div className="text-stone-500 text-sm font-bold mb-1">שלב {level.id} מתוך {LEVELS.length}</div>
+          <div className="text-6xl mb-3">{selectedChar.emoji}🏠</div>
+          <div className="text-stone-500 text-sm font-bold mb-1">שלב {level.id} מתוך {LEVELS.length} • {selectedChar.name}</div>
           <h2 className="text-2xl font-black text-white mb-3">{level.name}</h2>
           <p className="text-stone-300 text-sm mb-6 leading-relaxed">{level.story}</p>
           <div className="flex gap-2 mb-4">
@@ -747,7 +1085,7 @@ export default function MamadMaze() {
       {/* Top bar */}
       <div className="flex justify-between items-center px-4 py-2 border-b border-stone-700 bg-stone-900/80 backdrop-blur">
         <div className="flex items-center gap-2">
-          <span className="text-white font-black text-sm">שלב {level.id}</span>
+          <span className="text-white font-black text-sm">{selectedChar.emoji} שלב {level.id}</span>
           <span className="text-stone-500 text-xs">{level.name}</span>
         </div>
         <div className="flex items-center gap-3">
@@ -782,6 +1120,23 @@ export default function MamadMaze() {
         </div>
       )}
 
+      {/* Event banner */}
+      {eventBanner && (
+        <div className="flex items-center justify-center gap-2 py-2 bg-yellow-600/90 text-white font-black text-sm animate-pulse">
+          <span className="text-xl">{eventBanner.emoji}</span>
+          <span>{eventBanner.name}</span>
+          <span className="font-normal text-yellow-200">— {eventBanner.description}</span>
+        </div>
+      )}
+
+      {/* Active event indicator */}
+      {activeEvent && !eventBanner && (
+        <div className="flex items-center justify-center gap-1 py-1 bg-stone-800/80 text-stone-400 text-xs">
+          <span>{activeEvent.emoji}</span>
+          <span>{activeEvent.name}</span>
+        </div>
+      )}
+
       {/* Maze */}
       <div className="flex-1 flex items-center justify-center p-3 overflow-hidden">
         <div className="relative shadow-2xl rounded-lg overflow-hidden"
@@ -789,7 +1144,7 @@ export default function MamadMaze() {
           {maze.map((row, r) =>
             row.map((cell, c) => {
               const cellKey = `${r},${c}`;
-              const isRevealed = !fogEnabled || revealedCells.has(cellKey);
+              const isRevealed = (!fogEnabled && !fogOverride) || revealedCells.has(cellKey);
               return (
                 <div
                   key={cellKey}
@@ -809,7 +1164,15 @@ export default function MamadMaze() {
                       {cell === 4 && (
                         <span style={{ fontSize: cellSize * 0.55 }}>🔒</span>
                       )}
-                      {cell === 1 && level.decos[cellKey] && (
+                      {/* Cat blocking a path */}
+                      {cell === 0 && tempWallChanges.some(ch => ch.row === r && ch.col === c && !ch.wasWall) && (
+                        <span style={{ fontSize: cellSize * 0.55 }}>🐈</span>
+                      )}
+                      {/* Opened wall from event */}
+                      {cell === 1 && tempWallChanges.some(ch => ch.row === r && ch.col === c && ch.wasWall) && (
+                        <span style={{ fontSize: cellSize * 0.35 }} className="opacity-50">🚪</span>
+                      )}
+                      {cell === 1 && level.decos[cellKey] && !tempWallChanges.some(ch => ch.row === r && ch.col === c) && (
                         <span style={{ fontSize: cellSize * 0.4 }} className="opacity-60">
                           {level.decos[cellKey]}
                         </span>
@@ -828,6 +1191,17 @@ export default function MamadMaze() {
                       )}
                     </>
                   )}
+                  {/* Zoe's ability: show collectibles through fog */}
+                  {!isRevealed && selectedChar.revealItems && collectibles.some(
+                    coll => coll.row === r && coll.col === c && !coll.collected
+                  ) && (
+                    <span
+                      style={{ fontSize: cellSize * 0.4 }}
+                      className="absolute animate-pulse opacity-60"
+                    >
+                      ✨
+                    </span>
+                  )}
                 </div>
               );
             })
@@ -844,7 +1218,7 @@ export default function MamadMaze() {
               transition: 'left 0.07s linear, top 0.07s linear',
             }}
           >
-            <span style={{ fontSize: cellSize * 0.7 }}>👧</span>
+            <span style={{ fontSize: cellSize * 0.7 }}>{selectedChar.emoji}</span>
           </div>
         </div>
       </div>
@@ -863,7 +1237,7 @@ export default function MamadMaze() {
             className="h-13 bg-stone-700 hover:bg-stone-600 active:bg-stone-500 active:scale-95 text-white rounded-xl text-2xl font-black border border-stone-600 touch-none transition-all cursor-pointer"
           >←</button>
           <div className="h-13 bg-stone-800 rounded-xl flex items-center justify-center border border-stone-700">
-            <span className="text-stone-600 text-lg">👧</span>
+            <span className="text-stone-600 text-lg">{selectedChar.emoji}</span>
           </div>
           <button
             onPointerDown={() => move(0, 1)}
