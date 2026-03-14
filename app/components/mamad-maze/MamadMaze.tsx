@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import Link from 'next/link';
 
 // 0=wall, 1=floor, 2=start(toilet), 3=end(ממ"ד)
@@ -58,6 +58,41 @@ function formatTime(s: number) {
 }
 
 const START_POS = findStart();
+
+function getCellBg(cell: number) {
+  if (cell === 0) return 'bg-stone-800 border border-stone-900';
+  if (cell === 3) return 'bg-green-500';
+  if (cell === 2) return 'bg-blue-900';
+  return 'bg-stone-600';
+}
+
+const MazeGrid = memo(function MazeGrid({ cellSize }: { cellSize: number }) {
+  return (
+    <>
+      {MAZE.map((row, r) =>
+        row.map((cell, c) => (
+          <div
+            key={`${r}-${c}`}
+            className={`absolute flex items-center justify-center ${getCellBg(cell)}`}
+            style={{ left: c * cellSize, top: r * cellSize, width: cellSize, height: cellSize }}
+          >
+            {cell === 3 && (
+              <span style={{ fontSize: cellSize * 0.55 }} className="drop-shadow">🛡️</span>
+            )}
+            {cell === 2 && (
+              <span style={{ fontSize: cellSize * 0.55 }}>🚽</span>
+            )}
+            {cell === 1 && DECOS[`${r},${c}`] && (
+              <span style={{ fontSize: cellSize * 0.4 }} className="opacity-60">
+                {DECOS[`${r},${c}`]}
+              </span>
+            )}
+          </div>
+        ))
+      )}
+    </>
+  );
+});
 
 export default function MamadMaze() {
   const [phase, setPhase] = useState<'intro' | 'playing' | 'won' | 'lost'>('intro');
@@ -132,13 +167,6 @@ export default function MamadMaze() {
     setTimeLeft(GAME_TIME);
     setMoves(0);
     setPhase('playing');
-  }
-
-  function getCellBg(cell: number) {
-    if (cell === 0) return 'bg-stone-800 border border-stone-900';
-    if (cell === 3) return 'bg-green-500';
-    if (cell === 2) return 'bg-blue-900';
-    return 'bg-stone-600';
   }
 
   const urgent = timeLeft <= 10 && phase === 'playing';
@@ -263,27 +291,7 @@ export default function MamadMaze() {
       <div className="flex-1 flex items-center justify-center p-3 overflow-hidden">
         <div className="relative shadow-2xl rounded-lg overflow-hidden"
           style={{ width: COLS * cellSize, height: ROWS * cellSize }}>
-          {MAZE.map((row, r) =>
-            row.map((cell, c) => (
-              <div
-                key={`${r}-${c}`}
-                className={`absolute flex items-center justify-center ${getCellBg(cell)}`}
-                style={{ left: c * cellSize, top: r * cellSize, width: cellSize, height: cellSize }}
-              >
-                {cell === 3 && (
-                  <span style={{ fontSize: cellSize * 0.55 }} className="drop-shadow">🛡️</span>
-                )}
-                {cell === 2 && (
-                  <span style={{ fontSize: cellSize * 0.55 }}>🚽</span>
-                )}
-                {cell === 1 && DECOS[`${r},${c}`] && (
-                  <span style={{ fontSize: cellSize * 0.4 }} className="opacity-60">
-                    {DECOS[`${r},${c}`]}
-                  </span>
-                )}
-              </div>
-            ))
-          )}
+          <MazeGrid cellSize={cellSize} />
 
           {/* Player */}
           <div
