@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "skills": {
+    "Git Commit Helper": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "8e637738af4f6ec001f0f83703ced429c8d2bc62af9a5523345294ef16ff71b3"
+    },
+    "algorithmic-art": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "5c2804e8f0d4944c7ce6939a2e4afdcf0cb69c966a505481ed8b96e20bb32eee"
+    },
+    "artifacts-builder": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "3d9f1552b68fd903827653255bf9ef4153a13bf07b9b6f1eebcbf39cf420136f"
+    },
+    "calculate-priority-score": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "6ca7182bb38c76d7da2431a87f57dbfd92e240aed865661964ee4dc523da91e7"
+    },
+    "canvas-design": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "e1bef835e7e6624d39a161e8d7da79bb4e55887871991f06e3efdb7fcc85f6af"
+    },
+    "changelog-generator": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "0facdb5c491a654e3b0f6d300fb8fa14472d811cb715c632dc2862919b277dae"
+    },
+    "cleanup-health-inline": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "925e6f271df83f452d818675a4ceaa01556adacd12f28a9b5a7448ecaa7f6c3f"
+    },
+    "code-review": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "6b6b2757b7de9a1147557e6e75021bf3012e8efd3254327c39869c528d5325b2"
+    },
+    "content-research-writer": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "de7e9085e875a651f209c826d1a5e7dd5f2436fb38fe565ef76b54492c1a0c22"
+    },
+    "deploy-to-vercel": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "d2b5bcc7c09fdb649129ffc7dd7b647ec1b155736974b974292675afd588cb39"
+    },
+    "deps-health-inline": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "aa7b50b15cc14807ce2ef1625e456895b401ef03a69c45f84c8c9ae82c038e0e"
+    },
+    "extract-version": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "a55ab22caa11c086c25525a6acf48be560982f16efd169648836fd8d8758224f"
+    },
+    "format-commit-message": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "cfd7dd63102174e66fd38a234fa9689a956b8b10a90fc29856190c43db013539"
+    },
+    "format-markdown-table": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "c3db715a6f66d562079fdbf5c54099e8b156f9f8b5e3c53a9ea7325b6432007d"
+    },
+    "format-todo-list": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "02d8352e7cdca670679e7ff9924fb548fdf7229207885b19625cfcb23d5f8b39"
+    },
+    "frontend-aesthetics": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "ca4b0e44fdcbed6b3108b5bd227ef1329e3344b8ec03a41515073ca32a47718e"
+    },
+    "generate-changelog": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "2381bd7c659f1a8b23175ea2b698c6e0125b7ce0ca7cdd8569ceba356e9f47b4"
+    },
+    "generate-report-header": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "1271051ed85eedb852e5ca4369585759366ba5f122147534d09d14e4c1afd7ee"
+    },
+    "health-bugs": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "53f41c46fd52bce55730b581176a6d527bc521ca63ede8faebe74f6cd15451dc"
+    },
+    "lead-research-assistant": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "08cf5477dfdcbefa0758fad431c226efb9f09e108c8c6477b4a14db2d6810889"
+    },
+    "parse-error-logs": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "d4341c6795ad66a4c979e6c9b29fda508fa18c3221a7360553cec2e9a624940c"
+    },
+    "parse-git-status": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "4c3e57356a7d24c044ea0929db58a3587c6ad06064ae91ad1697a465b51b9c93"
+    },
+    "parse-package-json": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "b86e0ac9ddaee683006f82fe24f0b68cbf15dbae443fcc2021af6460bf0f7e65"
+    },
+    "process-issues": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "0d5274a1c66cc9f63538d2caeb5540e8a535a9294935037a2d8aa1c2fa5a2871"
+    },
+    "process-logs": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "cd5293a27350e0471d10418f5f7d2400e99ee7d5e8ab74a3ae192a81a6e7ff3a"
+    },
+    "render-template": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "bffde81a1a0987432a56c0d82cce0d8c56f216a10f03d3fa3dfb05f39fb7102a"
+    },
+    "reuse-health-inline": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "e8d52a9b6ec795856bd53131bf6ae579ce9752a0cb4ff7ce2f880df80e21aa86"
+    },
+    "rollback-changes": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "a1e823842acc3b3119198a52898380e3669a688391bf1e4996572aa2bb2650ae"
+    },
+    "run-quality-gate": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "bd722083045bcd0afce1a264c358f7d95caed0dc309e9fc14a21c8cb6d4abc94"
+    },
+    "security-health-inline": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "bf19c1d52b1f2b3315be42e5d06463dca107a8d2e08cf1e5ca0421d4ccbb5f3e"
+    },
+    "senior-architect": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "877381c834f72a278dc03ff2e315d65797d63488f09e8e2225d4fdddc0ff18dc"
+    },
+    "senior-devops": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "1e0472ec40916aeed3cdab8a1290aef4739a7e50f883e6a984bb5e03d1e69dd7"
+    },
+    "senior-prompt-engineer": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "10a3a50802429d4e542dc835634c8864d4eaf8d87a06f119f2e7ff3f772428ed"
+    },
+    "setup-knip": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "8a9e87e6f0625916eac332e10a3fc4f8527d52eb0968417d5913120b12603ecd"
+    },
+    "systematic-debugging": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "72e9ab72627e4fd8ed26a582e82309a98ecdc4f6e1c99418430ac05682c9e91d"
+    },
+    "theme-factory": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "638b36fc1d94fb5b4e18f76359df165d1534b8ec5a3d97ce89a1966f9fcb9a47"
+    },
+    "ui-design-system": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "2f6f9af21d896c6a4c2e3274d2f974099cf8f4a2f6f8c953c273b7029d92b396"
+    },
+    "ux-researcher-designer": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "4e4fd356cdd7f3fc96888a2ab2fa13e8cae14f05b9a144528b0a16b7dc66443a"
+    },
+    "validate-plan-file": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "66a4b507b66c953daaf61076d3b7a61351604b7b219a3b43f2174304ae584f1d"
+    },
+    "validate-report-file": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "861057902568b7333ec848fd289e8647ee7ca7e5f6eec3fb55e759be52d92e2e"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "f98931159fa9c7fed043bcd18a891a46dcf89ababa38df13a4c5b7b30dc0ce07"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "afeca00ac2f492d88fdd010e73d91719a5b57c564bb4a73325b0bd77e11323ab"
+    },
+    "vercel-react-native-skills": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "2e9088a7333666d8c2833b8ff58bd51b955501c42b4c7244f72b4cbf22dafcc4"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    },
+    "webapp-testing": {
+      "source": "maslennikov-ig/claude-code-orchestrator-kit",
+      "sourceType": "github",
+      "computedHash": "cf8e5916d474886bd67b09691247f43f331523008b7d366064bc607ab42d6302"
+    }
+  }
+}
