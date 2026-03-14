@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import Link from 'next/link';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -350,6 +350,88 @@ function getVisibleCells(row: number, col: number, maze: number[][], radius: num
   }
   return visible;
 }
+
+// ── Hoisted helpers ─────────────────────────────────────────────────────────────
+function getCellBg(cell: number) {
+  if (cell === 0) return 'bg-stone-800 border border-stone-900';
+  if (cell === 3) return 'bg-green-600';
+  if (cell === 2) return 'bg-blue-900';
+  if (cell === 4) return 'bg-amber-800';
+  return 'bg-stone-600';
+}
+
+// ── Memoized MazeCell ───────────────────────────────────────────────────────────
+interface MazeCellProps {
+  r: number;
+  c: number;
+  cell: number;
+  cellSize: number;
+  isRevealed: boolean;
+  collectibles: Collectible[];
+  tempWallChanges: { row: number; col: number; wasWall: boolean }[];
+  decos: Record<string, string>;
+  revealItems: boolean;
+}
+
+const MazeCell = memo(function MazeCell({
+  r, c, cell, cellSize, isRevealed, collectibles, tempWallChanges, decos, revealItems,
+}: MazeCellProps) {
+  const cellKey = `${r},${c}`;
+  return (
+    <div
+      className={`absolute flex items-center justify-center transition-all duration-200 ${
+        isRevealed ? getCellBg(cell) : 'bg-stone-950'
+      }`}
+      style={{ left: c * cellSize, top: r * cellSize, width: cellSize, height: cellSize }}
+    >
+      {isRevealed && (
+        <>
+          {cell === 3 && (
+            <span style={{ fontSize: cellSize * 0.55 }} className="drop-shadow">🛡️</span>
+          )}
+          {cell === 2 && (
+            <span style={{ fontSize: cellSize * 0.55 }}>🚽</span>
+          )}
+          {cell === 4 && (
+            <span style={{ fontSize: cellSize * 0.55 }}>🔒</span>
+          )}
+          {cell === 0 && tempWallChanges.some(ch => ch.row === r && ch.col === c && !ch.wasWall) && (
+            <span style={{ fontSize: cellSize * 0.55 }}>🐈</span>
+          )}
+          {cell === 1 && tempWallChanges.some(ch => ch.row === r && ch.col === c && ch.wasWall) && (
+            <span style={{ fontSize: cellSize * 0.35 }} className="opacity-50">🚪</span>
+          )}
+          {cell === 1 && decos[cellKey] && !tempWallChanges.some(ch => ch.row === r && ch.col === c) && (
+            <span style={{ fontSize: cellSize * 0.4 }} className="opacity-60">
+              {decos[cellKey]}
+            </span>
+          )}
+          {collectibles.map((coll, ci) =>
+            coll.row === r && coll.col === c && !coll.collected ? (
+              <span
+                key={ci}
+                style={{ fontSize: cellSize * 0.5 }}
+                className="absolute animate-bounce drop-shadow-lg"
+              >
+                {COLLECTIBLE_EMOJI[coll.type]}
+              </span>
+            ) : null
+          )}
+        </>
+      )}
+      {!isRevealed && revealItems && collectibles.some(
+        coll => coll.row === r && coll.col === c && !coll.collected
+      ) && (
+        <span
+          style={{ fontSize: cellSize * 0.4 }}
+          className="absolute animate-pulse opacity-60"
+        >
+          ✨
+        </span>
+      )}
+    </div>
+  );
+});
 
 // ── Component ──────────────────────────────────────────────────────────────────
 export default function MamadMaze() {
@@ -764,14 +846,6 @@ export default function MamadMaze() {
     }
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function getCellBg(cell: number) {
-    if (cell === 0) return 'bg-stone-800 border border-stone-900';
-    if (cell === 3) return 'bg-green-600';
-    if (cell === 2) return 'bg-blue-900';
-    if (cell === 4) return 'bg-amber-800';
-    return 'bg-stone-600';
-  }
-
   const urgent = timeLeft <= 10 && phase === 'playing';
   const timerColor = timeLeft > 30 ? 'text-green-400' : timeLeft > 10 ? 'text-yellow-300 animate-pulse' : 'text-red-400 animate-pulse';
   const progress = typeof window !== 'undefined' ? loadProgress() : {};
@@ -1142,69 +1216,20 @@ export default function MamadMaze() {
         <div className="relative shadow-2xl rounded-lg overflow-hidden"
           style={{ width: cols * cellSize, height: rows * cellSize }}>
           {maze.map((row, r) =>
-            row.map((cell, c) => {
-              const cellKey = `${r},${c}`;
-              const isRevealed = (!fogEnabled && !fogOverride) || revealedCells.has(cellKey);
-              return (
-                <div
-                  key={cellKey}
-                  className={`absolute flex items-center justify-center transition-all duration-200 ${
-                    isRevealed ? getCellBg(cell) : 'bg-stone-950'
-                  }`}
-                  style={{ left: c * cellSize, top: r * cellSize, width: cellSize, height: cellSize }}
-                >
-                  {isRevealed && (
-                    <>
-                      {cell === 3 && (
-                        <span style={{ fontSize: cellSize * 0.55 }} className="drop-shadow">🛡️</span>
-                      )}
-                      {cell === 2 && (
-                        <span style={{ fontSize: cellSize * 0.55 }}>🚽</span>
-                      )}
-                      {cell === 4 && (
-                        <span style={{ fontSize: cellSize * 0.55 }}>🔒</span>
-                      )}
-                      {/* Cat blocking a path */}
-                      {cell === 0 && tempWallChanges.some(ch => ch.row === r && ch.col === c && !ch.wasWall) && (
-                        <span style={{ fontSize: cellSize * 0.55 }}>🐈</span>
-                      )}
-                      {/* Opened wall from event */}
-                      {cell === 1 && tempWallChanges.some(ch => ch.row === r && ch.col === c && ch.wasWall) && (
-                        <span style={{ fontSize: cellSize * 0.35 }} className="opacity-50">🚪</span>
-                      )}
-                      {cell === 1 && level.decos[cellKey] && !tempWallChanges.some(ch => ch.row === r && ch.col === c) && (
-                        <span style={{ fontSize: cellSize * 0.4 }} className="opacity-60">
-                          {level.decos[cellKey]}
-                        </span>
-                      )}
-                      {/* Collectibles on the maze */}
-                      {collectibles.map((coll, ci) =>
-                        coll.row === r && coll.col === c && !coll.collected ? (
-                          <span
-                            key={ci}
-                            style={{ fontSize: cellSize * 0.5 }}
-                            className="absolute animate-bounce drop-shadow-lg"
-                          >
-                            {COLLECTIBLE_EMOJI[coll.type]}
-                          </span>
-                        ) : null
-                      )}
-                    </>
-                  )}
-                  {/* Zoe's ability: show collectibles through fog */}
-                  {!isRevealed && selectedChar.revealItems && collectibles.some(
-                    coll => coll.row === r && coll.col === c && !coll.collected
-                  ) && (
-                    <span
-                      style={{ fontSize: cellSize * 0.4 }}
-                      className="absolute animate-pulse opacity-60"
-                    >
-                      ✨
-                    </span>
-                  )}
-                </div>
-              );
-            })
+            row.map((cell, c) => (
+              <MazeCell
+                key={`${r},${c}`}
+                r={r}
+                c={c}
+                cell={cell}
+                cellSize={cellSize}
+                isRevealed={(!fogEnabled && !fogOverride) || revealedCells.has(`${r},${c}`)}
+                collectibles={collectibles}
+                tempWallChanges={tempWallChanges}
+                decos={level.decos}
+                revealItems={selectedChar.revealItems}
+              />
+            ))
           )}
 
           {/* Player */}
