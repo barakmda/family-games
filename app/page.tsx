@@ -49,12 +49,26 @@ const GAMES = [
     title: 'חיים מציל את הלגו',
     description: 'יש אזעקה! תפוס כמה שיותר לגו טכניק לפני שאמא תופסת.',
     quip: '״מה זה ׳צעצוע׳? זה השקעה! תפסיק להגיד ׳צעצוע׳.״',
-    badge: 'חדש!',
+    badge: 'קלאסיקה',
     badgeColor: 'bg-yellow-400 text-yellow-900',
     cardBg: 'bg-gradient-to-br from-blue-900 to-blue-950',
     borderColor: 'border-blue-600 hover:border-yellow-400',
     accentColor: 'text-blue-300',
     buttonColor: 'text-yellow-400 group-hover:text-yellow-300',
+    dark: true,
+  },
+  {
+    href: '/games/lego-store',
+    emoji: '🧱🏪💰',
+    title: 'חנות הלגו בעזריאלי',
+    description: 'נהל סניף לגו בקניון עזריאלי. מלאי, צוות, לקוחות ושיווק.',
+    quip: '״בן, אתה יודע כמה עולה שכירות בעזריאלי? אל תשאל.״',
+    badge: 'חדש!',
+    badgeColor: 'bg-green-500 text-white',
+    cardBg: 'bg-gradient-to-br from-emerald-900 to-blue-950',
+    borderColor: 'border-emerald-600 hover:border-green-400',
+    accentColor: 'text-emerald-300',
+    buttonColor: 'text-green-400 group-hover:text-green-300',
     dark: true,
   },
 ];
@@ -102,7 +116,7 @@ export default function HomePage() {
 
           {/* Stats bar */}
           <div className="flex justify-center gap-6 mt-5 text-amber-400/80 text-xs sm:text-sm font-medium">
-            <span>4 משחקים</span>
+            <span>5 משחקים</span>
             <span className="text-amber-600">|</span>
             <span>0 שקל</span>
             <span className="text-amber-600">|</span>
