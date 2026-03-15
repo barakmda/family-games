@@ -181,61 +181,259 @@ function scoreMsg(s: number) {
 function KitchenScene() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      {/* Wall background */}
+      {/* ── Wall area (top ~45%) ── */}
+      {/* Base wall color with warm kitchen wallpaper feel */}
       <div className="absolute inset-0" style={{
-        background: 'linear-gradient(180deg, #f5e6c8 0%, #e8d5a8 40%, #8B6914 40.5%, #6B4F12 100%)',
+        background: 'linear-gradient(180deg, #e8d8b8 0%, #dfc9a0 25%, #d4ba8a 40%, #8B6914 40.5%, #5a4210 55%, #3d2b0f 100%)',
       }} />
-      {/* Tile pattern on wall */}
-      <div className="absolute top-0 left-0 right-0 bottom-[60%]" style={{
+
+      {/* Realistic kitchen tile pattern on wall - subway tile style */}
+      <div className="absolute top-0 left-0 right-0" style={{
+        height: '40%',
         backgroundImage: `
-          linear-gradient(45deg, rgba(139,105,20,0.06) 25%, transparent 25%),
-          linear-gradient(-45deg, rgba(139,105,20,0.06) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, rgba(139,105,20,0.06) 75%),
-          linear-gradient(-45deg, transparent 75%, rgba(139,105,20,0.06) 75%)
+          linear-gradient(0deg, rgba(180,155,110,0.3) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(180,155,110,0.3) 1px, transparent 1px)
         `,
-        backgroundSize: '30px 30px',
-        backgroundPosition: '0 0, 0 15px, 15px -15px, -15px 0px',
+        backgroundSize: '60px 30px',
       }} />
-      {/* Wooden counter top */}
+      {/* Offset every other row for subway tile effect */}
+      <div className="absolute top-0 left-0 right-0" style={{
+        height: '40%',
+        backgroundImage: `
+          linear-gradient(0deg, rgba(160,135,90,0.15) 1px, transparent 1px)
+        `,
+        backgroundSize: '60px 60px',
+        backgroundPosition: '30px 15px',
+      }} />
+
+      {/* Subtle tile grout shadow for depth */}
+      <div className="absolute top-0 left-0 right-0" style={{
+        height: '40%',
+        backgroundImage: `
+          linear-gradient(180deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.02) 14px, transparent 15px, transparent 29px, rgba(0,0,0,0.03) 30px),
+          linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.01) 28px, transparent 29px, transparent 59px, rgba(0,0,0,0.02) 60px)
+        `,
+        backgroundSize: '60px 30px',
+      }} />
+
+      {/* Wallpaper decorative border strip between wall and counter */}
+      <div className="absolute left-0 right-0" style={{
+        top: '36%',
+        height: '14px',
+        background: 'linear-gradient(180deg, #c49a3c 0%, #a07828 40%, #8B6914 70%, #6d5210 100%)',
+        borderTop: '2px solid #d4aa4c',
+        borderBottom: '1px solid #5a4210',
+      }} />
+      {/* Decorative repeating pattern on the border strip */}
+      <div className="absolute left-0 right-0" style={{
+        top: '36%',
+        height: '14px',
+        backgroundImage: `repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 18px,
+          rgba(255,215,0,0.15) 18px,
+          rgba(255,215,0,0.15) 20px,
+          transparent 20px,
+          transparent 38px
+        )`,
+      }} />
+
+      {/* ── Wooden counter (thick, with realistic wood grain) ── */}
       <div className="absolute left-0 right-0" style={{
         top: '38%',
-        height: '8px',
-        background: 'linear-gradient(180deg, #a0782c 0%, #8B6914 50%, #6d5210 100%)',
-        boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+        height: '24px',
+        background: `
+          linear-gradient(180deg,
+            #c49a3c 0%,
+            #b8892e 15%,
+            #a07828 30%,
+            #96702a 50%,
+            #8B6914 65%,
+            #7d5e12 80%,
+            #6d5210 100%
+          )
+        `,
+        boxShadow: '0 6px 16px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,215,0,0.15)',
+      }}>
+        {/* Wood grain horizontal lines */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            repeating-linear-gradient(
+              180deg,
+              transparent 0px,
+              transparent 2px,
+              rgba(90,55,10,0.12) 2px,
+              rgba(90,55,10,0.12) 3px,
+              transparent 3px,
+              transparent 5px,
+              rgba(90,55,10,0.08) 5px,
+              rgba(90,55,10,0.08) 6px,
+              transparent 6px,
+              transparent 9px
+            )
+          `,
+        }} />
+        {/* Wood grain subtle wavy pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            repeating-linear-gradient(
+              95deg,
+              transparent 0px,
+              rgba(139,105,20,0.06) 40px,
+              transparent 80px,
+              rgba(139,105,20,0.04) 120px,
+              transparent 160px
+            )
+          `,
+        }} />
+        {/* Counter edge highlight (front bevel) */}
+        <div className="absolute left-0 right-0 bottom-0" style={{
+          height: '4px',
+          background: 'linear-gradient(180deg, #6d5210 0%, #4a3508 100%)',
+          borderTop: '1px solid rgba(255,215,0,0.1)',
+        }} />
+      </div>
+
+      {/* ── Kitchen floor area (bottom ~55%) ── */}
+      {/* Checkered floor tile pattern */}
+      <div className="absolute left-0 right-0 bottom-0" style={{
+        top: '44%',
+        backgroundImage: `
+          linear-gradient(45deg, #3a2a12 25%, transparent 25%),
+          linear-gradient(-45deg, #3a2a12 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #3a2a12 75%),
+          linear-gradient(-45deg, transparent 75%, #3a2a12 75%)
+        `,
+        backgroundSize: '40px 40px',
+        backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
+        backgroundColor: '#2d1f0e',
       }} />
-      {/* Shelf */}
+      {/* Floor tile grout lines */}
+      <div className="absolute left-0 right-0 bottom-0" style={{
+        top: '44%',
+        backgroundImage: `
+          linear-gradient(0deg, rgba(0,0,0,0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.2) 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px',
+      }} />
+      {/* Floor shine / reflection */}
+      <div className="absolute left-0 right-0 bottom-0" style={{
+        top: '44%',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.15) 100%)',
+      }} />
+
+      {/* ── Kitchen decorations ── */}
+      {/* Shelf on wall */}
       <div className="absolute right-4 sm:right-8" style={{
         top: '8%',
-        width: '120px',
-        height: '6px',
-        background: 'linear-gradient(180deg, #8B6914 0%, #6d5210 100%)',
-        boxShadow: '0 3px 6px rgba(0,0,0,0.2)',
-        borderRadius: '2px',
-      }} />
+        width: '130px',
+        height: '8px',
+        background: 'linear-gradient(180deg, #a07828 0%, #8B6914 50%, #6d5210 100%)',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+        borderRadius: '2px 2px 0 0',
+      }}>
+        {/* Shelf bracket left */}
+        <div className="absolute -bottom-10 left-2 w-2" style={{
+          height: '10px',
+          background: '#6d5210',
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%)',
+        }} />
+        {/* Shelf bracket right */}
+        <div className="absolute -bottom-10 right-2 w-2" style={{
+          height: '10px',
+          background: '#6d5210',
+          clipPath: 'polygon(0 0, 100% 0, 0 100%)',
+        }} />
+      </div>
+
       {/* Pot on shelf */}
-      <div className="absolute right-8 sm:right-14" style={{ top: '2%' }}>
-        <svg width="50" height="45" viewBox="0 0 50 45">
-          <ellipse cx="25" cy="40" rx="20" ry="5" fill="#666" />
-          <rect x="5" y="15" width="40" height="25" rx="3" fill="#888" />
-          <ellipse cx="25" cy="15" rx="20" ry="6" fill="#999" />
-          <ellipse cx="25" cy="15" rx="16" ry="4" fill="#b34700" />
+      <div className="absolute right-8 sm:right-14" style={{ top: '1%' }}>
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <ellipse cx="25" cy="43" rx="20" ry="5" fill="#555" />
+          <rect x="5" y="16" width="40" height="27" rx="4" fill="#777" />
+          <rect x="6" y="16" width="38" height="27" rx="3" fill="url(#potGrad)" />
+          <defs>
+            <linearGradient id="potGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#666" />
+              <stop offset="30%" stopColor="#999" />
+              <stop offset="70%" stopColor="#888" />
+              <stop offset="100%" stopColor="#666" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="25" cy="16" rx="20" ry="6" fill="#aaa" />
+          <ellipse cx="25" cy="16" rx="16" ry="4" fill="#b34700" />
+          <ellipse cx="25" cy="15.5" rx="14" ry="3" fill="#cc5500" opacity="0.6" />
+          {/* Handles */}
+          <rect x="0" y="24" width="6" height="4" rx="2" fill="#888" />
+          <rect x="44" y="24" width="6" height="4" rx="2" fill="#888" />
           {/* Steam */}
-          <path d="M18 10 Q16 5 18 0" stroke="#ddd" strokeWidth="1.5" fill="none" opacity="0.6">
+          <path d="M18 10 Q16 5 18 0" stroke="#ddd" strokeWidth="1.5" fill="none" opacity="0.5">
             <animate attributeName="d" values="M18 10 Q16 5 18 0;M18 10 Q20 5 18 0;M18 10 Q16 5 18 0" dur="2s" repeatCount="indefinite" />
           </path>
-          <path d="M30 8 Q28 3 30 -2" stroke="#ddd" strokeWidth="1.5" fill="none" opacity="0.6">
-            <animate attributeName="d" values="M30 8 Q28 3 30 -2;M30 8 Q32 3 30 -2;M30 8 Q28 3 30 -2" dur="2.5s" repeatCount="indefinite" />
+          <path d="M25 9 Q23 4 25 -1" stroke="#ddd" strokeWidth="1" fill="none" opacity="0.4">
+            <animate attributeName="d" values="M25 9 Q23 4 25 -1;M25 9 Q27 4 25 -1;M25 9 Q23 4 25 -1" dur="2.3s" repeatCount="indefinite" />
+          </path>
+          <path d="M32 10 Q30 5 32 0" stroke="#ddd" strokeWidth="1.5" fill="none" opacity="0.5">
+            <animate attributeName="d" values="M32 10 Q30 5 32 0;M32 10 Q34 5 32 0;M32 10 Q30 5 32 0" dur="2.5s" repeatCount="indefinite" />
           </path>
         </svg>
       </div>
-      {/* Kitchen items on left */}
+
+      {/* Spice jar on left wall */}
       <div className="absolute left-4 sm:left-8" style={{ top: '5%' }}>
-        <svg width="40" height="50" viewBox="0 0 40 50">
-          {/* Spice jar */}
-          <rect x="5" y="10" width="30" height="35" rx="3" fill="#c4956a" />
-          <rect x="8" y="0" width="24" height="12" rx="2" fill="#d4a574" />
-          <rect x="10" y="18" width="20" height="15" rx="2" fill="#f5e6c8" />
-          <text x="20" y="28" textAnchor="middle" fontSize="7" fill="#8B4513">חזרת</text>
+        <svg width="45" height="55" viewBox="0 0 45 55">
+          {/* Jar body */}
+          <rect x="7" y="15" width="30" height="35" rx="4" fill="#c4956a" />
+          <rect x="8" y="15" width="28" height="35" rx="3" fill="url(#jarGrad)" />
+          <defs>
+            <linearGradient id="jarGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#b8855a" />
+              <stop offset="40%" stopColor="#d4a574" />
+              <stop offset="100%" stopColor="#c4956a" />
+            </linearGradient>
+          </defs>
+          {/* Lid */}
+          <rect x="9" y="2" width="26" height="14" rx="3" fill="#d4a574" />
+          <rect x="16" y="0" width="12" height="5" rx="2" fill="#c49060" />
+          {/* Label */}
+          <rect x="11" y="22" width="22" height="18" rx="2" fill="#f5e6c8" />
+          <rect x="11" y="22" width="22" height="18" rx="2" fill="none" stroke="#d4a574" strokeWidth="0.5" />
+          <text x="22" y="34" textAnchor="middle" fontSize="7" fill="#8B4513" fontWeight="bold">חזרת</text>
+        </svg>
+      </div>
+
+      {/* Second shelf on left with small items */}
+      <div className="absolute left-4 sm:left-8" style={{
+        top: '22%',
+        width: '80px',
+        height: '6px',
+        background: 'linear-gradient(180deg, #a07828 0%, #8B6914 50%, #6d5210 100%)',
+        boxShadow: '0 3px 6px rgba(0,0,0,0.25)',
+        borderRadius: '2px',
+      }} />
+      {/* Small bottle on second shelf */}
+      <div className="absolute left-8 sm:left-12" style={{ top: '17%' }}>
+        <svg width="20" height="30" viewBox="0 0 20 30">
+          <rect x="3" y="8" width="14" height="20" rx="2" fill="#4a7c59" />
+          <rect x="6" y="2" width="8" height="8" rx="1" fill="#5a9069" />
+          <rect x="7" y="0" width="6" height="3" rx="1" fill="#8B6914" />
+        </svg>
+      </div>
+
+      {/* Hanging utensils on wall (right side) */}
+      <div className="absolute right-2 sm:right-4" style={{ top: '20%' }}>
+        <svg width="30" height="60" viewBox="0 0 30 60">
+          {/* Hook bar */}
+          <rect x="0" y="0" width="30" height="3" rx="1" fill="#8B6914" />
+          {/* Ladle */}
+          <line x1="8" y1="3" x2="8" y2="25" stroke="#aaa" strokeWidth="2" />
+          <ellipse cx="8" cy="30" rx="6" ry="5" fill="#999" />
+          <ellipse cx="8" cy="29" rx="4" ry="3" fill="#777" />
+          {/* Spatula */}
+          <line x1="22" y1="3" x2="22" y2="22" stroke="#8B6914" strokeWidth="2" />
+          <rect x="18" y="22" width="8" height="14" rx="2" fill="#a07828" />
         </svg>
       </div>
     </div>
@@ -803,7 +1001,10 @@ export default function GefilteKingGame() {
         <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col">
 
           {/* ── Customer area (top half - behind the counter) ── */}
-          <div className="flex-1 flex items-end justify-center gap-3 px-4 pb-2 pt-4" style={{ minHeight: '250px' }}>
+          <div className="flex-1 flex items-end justify-center gap-3 px-4 pb-2 pt-4" style={{
+            minHeight: '250px',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.05) 100%)',
+          }}>
             {Array.from({ length: MAX_CUSTOMERS }, (_, i) => {
               const c = visible[i];
 
@@ -834,18 +1035,79 @@ export default function GefilteKingGame() {
             })}
           </div>
 
-          {/* ── Counter surface ── */}
+          {/* ── Counter surface (thick wood with grain texture) ── */}
           <div className="relative" style={{
-            height: '12px',
-            background: 'linear-gradient(180deg, #c49a3c 0%, #8B6914 30%, #6d5210 100%)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.2)',
-          }} />
+            height: '20px',
+            background: `linear-gradient(180deg,
+              #d4aa4c 0%,
+              #c49a3c 10%,
+              #b8892e 25%,
+              #a07828 45%,
+              #96702a 60%,
+              #8B6914 75%,
+              #7d5e12 90%,
+              #6d5210 100%
+            )`,
+            boxShadow: '0 6px 16px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,215,0,0.15)',
+          }}>
+            {/* Wood grain lines */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                repeating-linear-gradient(
+                  180deg,
+                  transparent 0px,
+                  transparent 2px,
+                  rgba(90,55,10,0.1) 2px,
+                  rgba(90,55,10,0.1) 3px,
+                  transparent 3px,
+                  transparent 6px
+                )
+              `,
+            }} />
+            {/* Subtle wood knot pattern */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                radial-gradient(ellipse 30px 8px at 20% 50%, rgba(90,55,10,0.08) 0%, transparent 100%),
+                radial-gradient(ellipse 25px 6px at 60% 40%, rgba(90,55,10,0.06) 0%, transparent 100%),
+                radial-gradient(ellipse 35px 10px at 85% 60%, rgba(90,55,10,0.07) 0%, transparent 100%)
+              `,
+            }} />
+            {/* Front edge bevel */}
+            <div className="absolute left-0 right-0 bottom-0" style={{
+              height: '4px',
+              background: 'linear-gradient(180deg, #6d5210 0%, #4a3508 100%)',
+              borderTop: '1px solid rgba(255,215,0,0.08)',
+            }} />
+          </div>
 
-          {/* ── Kitchen area (bottom) ── */}
+          {/* ── Kitchen area (bottom) with tiled floor ── */}
           <div className="relative" style={{
-            background: 'linear-gradient(180deg, #3d2b0f 0%, #2d1f0e 100%)',
+            background: '#2d1f0e',
             borderTop: '1px solid #4a3518',
           }}>
+            {/* Kitchen floor tiles pattern */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                linear-gradient(45deg, rgba(58,42,18,0.6) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(58,42,18,0.6) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(58,42,18,0.6) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(58,42,18,0.6) 75%)
+              `,
+              backgroundSize: '36px 36px',
+              backgroundPosition: '0 0, 0 18px, 18px -18px, -18px 0px',
+            }} />
+            {/* Tile grout lines */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                linear-gradient(0deg, rgba(0,0,0,0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px)
+              `,
+              backgroundSize: '36px 36px',
+            }} />
+            {/* Subtle floor gradient overlay */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.1) 100%)',
+            }} />
             <div className="max-w-2xl mx-auto px-3 py-3 space-y-3">
 
               {/* Plate preview */}
