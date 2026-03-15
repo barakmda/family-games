@@ -6,12 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "remotion": "remotion studio app/videos/index.ts",
+    "render:greeting": "remotion render app/videos/index.ts GreetingVideo out/greeting.mp4"
   },
   "dependencies": {
+    "@pixi/react": "^8.0.5",
+    "@remotion/cli": "^4.0.435",
+    "@remotion/player": "^4.0.435",
+    "@remotion/zod-types": "^4.0.435",
     "next": "16.1.6",
+    "pixi.js": "^8.17.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "remotion": "^4.0.435",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

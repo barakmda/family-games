@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "server",
+  "dolt_database": "family_games",
+  "project_id": "6fee892d-4749-4834-bc4f-e585446812c8"
+}

@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏠 עדיין בממ"ד? — משחקי משפחה בטעם ביתי
 
-## Getting Started
+אתר משחקי משפחה בעברית, בנוי עם Next.js, React ו-Tailwind CSS.
+הרעיון פשוט: כל המשפחה תקועה בממ"ד, אז בואו נעשה מזה כיף.
 
-First, run the development server:
+## 🎮 המשחקים
+
+### 🚽🛡️ המבוך לממ"ד
+משחק מבוך בלחץ זמן עם 5 שלבים. מיכל תקועה על האסלה כשיש אזעקה — נווטו אותה דרך הדירה, הבניין והשכונה אל הממ"ד.
+- **5 שלבים** עם קושי עולה: הדירה → הבניין → הדלת הנעולה → השכנים → המרחק הגדול
+- **מערכת ניקוד**: 1-3 כוכבים לפי זמן ופריטים שנאספו, שיאים נשמרים בדפדפן
+- **פריטים אספנים**: 📱 טלפון (+5 שניות), 🧻 נייר (בונוס), 🔑 מפתח (פותח דלתות נעולות)
+- **ערפל מלחמה**: רואים רק את הסביבה הקרובה — ניתן להפעיל/לכבות
+- **אפקטים**: רעידת מסך, חלקיקים בניצחון, אנימציות דחיפות
+- ניווט במקלדת (חצים / WASD) או מובייל (החלקה / כפתורי חצים)
+- הודעות סיפוריות ייחודיות לכל שלב
+
+### 👑🐟 מלך הגפילטע
+משחק ניהול זמן — הגישו גפילטע פיש לבני משפחה חסרי סבלנות.
+- 9 דמויות משפחתיות עם הזמנות שונות
+- מערכת הכנה: כמות דג, חזרת ורוטב
+- מד "שקט תעשייתי" — אם הוא מגיע לאפס, המשחק נגמר
+- שיא אישי נשמר בדפדפן
+
+## 🚀 התקנה והרצה
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+האתר ייפתח ב-[http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ טכנולוגיות
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 16** — App Router
+- **React 19** — עם useReducer, useCallback, useRef
+- **Tailwind CSS 4** — עיצוב רספונסיבי
+- **TypeScript** — טיפוסים מלאים
+- תמיכה מלאה ב-RTL ועברית
 
-## Learn More
+## 📁 מבנה הפרויקט
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+├── page.tsx                          # דף ראשי — דשבורד המשחקים
+├── layout.tsx                        # Layout ראשי (RTL, מטא-דאטה)
+├── globals.css                       # סגנונות גלובליים
+├── components/
+│   ├── FooterMessage.tsx             # הודעות מתחלפות בפוטר
+│   ├── mamad-maze/
+│   │   └── MamadMaze.tsx             # משחק המבוך
+│   └── gefilte-king/
+│       └── GefilteKingGame.tsx       # משחק הגפילטע
+└── games/
+    ├── mamad-maze/
+    │   └── page.tsx                  # דף משחק המבוך
+    └── gefilte-king/
+        └── page.tsx                  # דף משחק הגפילטע
+```
