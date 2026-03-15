@@ -2,6 +2,36 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
+## Branching & PR Workflow
+
+**MANDATORY**: Every feature/fix MUST follow this workflow:
+
+1. **Create a feature branch** from `main`:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b claude/<feature-name>-<sessionId>
+   ```
+
+2. **Develop** all changes on the feature branch
+
+3. **Create a Pull Request** when the feature is complete:
+   ```bash
+   gh pr create --base main --head <branch-name> --title "<short title>" --body "<description>"
+   ```
+
+4. **Merge the PR** to `main`:
+   ```bash
+   gh pr merge <pr-number> --merge --delete-branch
+   ```
+
+**Rules:**
+- Never commit directly to `main`
+- One feature per branch — keep branches focused
+- Branch names: `claude/<feature-name>-<sessionId>`
+- Always create a PR before merging — no direct merges to `main`
+- Delete the feature branch after merge
+
 ## Quick Reference
 
 ```bash
