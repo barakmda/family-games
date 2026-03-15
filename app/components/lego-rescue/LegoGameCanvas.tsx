@@ -466,7 +466,7 @@ export default function LegoGameCanvas({
       }
 
       // Shelf lines
-      ctx.strokeStyle = 'rgba(148,163,184,0.1)';
+      ctx.strokeStyle = 'rgba(148,163,184,0.25)';
       ctx.lineWidth = 2;
       for (let y = H * 0.3; y < H; y += H * 0.25) {
         ctx.beginPath();
@@ -515,21 +515,21 @@ export default function LegoGameCanvas({
 
         // Glow for technic
         if (it.category === 'technic') {
-          ctx.fillStyle = 'rgba(34,197,94,0.15)';
+          ctx.fillStyle = 'rgba(34,197,94,0.35)';
           ctx.beginPath();
           ctx.arc(0, 0, size * 0.7, 0, Math.PI * 2);
           ctx.fill();
         }
 
         // Background rect
-        ctx.fillStyle = it.category === 'technic' ? 'rgba(34,197,94,0.2)' :
-                        it.category === 'logical' ? 'rgba(239,68,68,0.15)' :
-                        it.category === 'trap' ? 'rgba(251,191,36,0.15)' :
-                        'rgba(167,139,250,0.25)';
-        ctx.strokeStyle = it.category === 'technic' ? 'rgba(34,197,94,0.5)' :
-                          it.category === 'logical' ? 'rgba(239,68,68,0.3)' :
-                          it.category === 'trap' ? 'rgba(251,191,36,0.3)' :
-                          'rgba(167,139,250,0.5)';
+        ctx.fillStyle = it.category === 'technic' ? 'rgba(34,197,94,0.55)' :
+                        it.category === 'logical' ? 'rgba(239,68,68,0.45)' :
+                        it.category === 'trap' ? 'rgba(251,191,36,0.45)' :
+                        'rgba(167,139,250,0.55)';
+        ctx.strokeStyle = it.category === 'technic' ? 'rgba(34,197,94,0.8)' :
+                          it.category === 'logical' ? 'rgba(239,68,68,0.7)' :
+                          it.category === 'trap' ? 'rgba(251,191,36,0.7)' :
+                          'rgba(167,139,250,0.8)';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.roundRect(-size / 2, -size / 2, size, size, size * 0.25);
@@ -545,7 +545,7 @@ export default function LegoGameCanvas({
 
         // Name
         ctx.font = `bold ${Math.max(8, size * 0.17)}px 'Segoe UI',Arial,sans-serif`;
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fillStyle = 'white';
         ctx.fillText(it.name, 0, size * 0.3, size * 0.9);
 
         ctx.restore();
@@ -572,14 +572,25 @@ export default function LegoGameCanvas({
       // ── Player ──
       const px = s.playerX * W;
       const py = H - 60;
-      ctx.fillStyle = 'rgba(0,0,0,0.2)';
+      // Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.beginPath();
-      ctx.ellipse(px, py + 20, 25, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(px, py + 24, 28, 8, 0, 0, Math.PI * 2);
       ctx.fill();
+      // Body background circle
+      ctx.fillStyle = 'rgba(59,130,246,0.5)';
+      ctx.beginPath();
+      ctx.arc(px, py, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(59,130,246,0.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // Character emoji
       ctx.font = '48px serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('🧑‍🦱', px, py);
+      // Hands emoji
       ctx.font = '20px serif';
       ctx.fillText('🙌', px, py - 30);
 
