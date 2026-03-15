@@ -2,6 +2,23 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
+## Navigation Rule
+
+**MANDATORY**: Every new page (other than the home page `/app/page.tsx`) MUST include the shared `<GameNav />` component from `@/app/components/GameNav`. This provides a sticky navigation bar with a "back to home" link. Import and render it at the top of the page:
+
+```tsx
+import GameNav from '@/app/components/GameNav';
+
+export default function MyPage() {
+  return (
+    <>
+      <GameNav />
+      <MyComponent />
+    </>
+  );
+}
+```
+
 ## Branching & PR Workflow
 
 **MANDATORY**: Every feature/fix MUST follow this workflow:
